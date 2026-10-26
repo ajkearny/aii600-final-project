@@ -1,6 +1,11 @@
 When starting to work (in gitbash):
+#shows differences between main and your branch
 git checkout main
+
+#pulls the changes into your branch
 git pull
+
+#creates branch to work on with the name you give it
 git checkout -b short-descriptive-name
 
 After completing a change (in gitbash):
