@@ -26,3 +26,14 @@ This file is the history of the project. Append an entry when a choice changes t
     - no alternatives
 - Revisit. What would change the choice.
     - none
+
+## 2026-10-26: Putting in our proposal idea (Mitch)
+
+- Decision. What you chose.
+    - We chose to evaluate how the average mana value of a two-colour limited Magic the Gathering deck predicts its game win probability, using 17Lands game data and card attributes from Scryfall and MTGJSON.
+- Why. The evidence.
+    - Mana value exists for every card in every source we found so it can be computed for every deck. A player controls the average mana value of their deck when building it so it is actionable. keeping the deck selection to two-colour decks keeps the dataset smaller too. 17Lands is also public game-level data from real games so avoid having to simulate.
+- Alternative. What you rejected.
+    - Using the commander format of the game which has 2.5x the amount of cards and far less real world data to work, which would force us to do simulations. Simulations are a problem because the deck arent piloted by real people making real decisions with past experience.
+- Revisit. What would change the choice.
+    - Nothing yet
