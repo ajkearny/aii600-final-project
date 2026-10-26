@@ -8,3 +8,11 @@ This file is the history of the project. Append an entry when a choice changes t
 - Why. The evidence.
 - Alternative. What you rejected.
 - Revisit. What would change the choice.
+
+
+## 2026-10-25: Autumn Testing Branches
+
+- Decision. What you chose. -Testing the branching workflow.
+- Why. The evidence. -We wanted to make sure we understood how to create, change, and push branches before beginning the project.
+- Alternative. What you rejected. -Rejected the alternative of not testing it because we both don't want to mess up any of our work.
+- Revisit. What would change the choice. -If we were both github pros we probably wouldn't need to test.

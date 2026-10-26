@@ -1,0 +1,13 @@
+When starting to work (in gitbash):
+git checkout main
+git pull
+git checkout -b short-descriptive-name
+
+After completing a change (in gitbash):
+git add .
+git commit -m "Why you made this change"
+git push -u origin short-descriptive-name
+
+Create the pull request (in command line):
+gh pr create
+
