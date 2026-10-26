@@ -16,3 +16,13 @@ This file is the history of the project. Append an entry when a choice changes t
 - Why. The evidence. -We wanted to make sure we understood how to create, change, and push branches before beginning the project.
 - Alternative. What you rejected. -Rejected the alternative of not testing it because we both don't want to mess up any of our work.
 - Revisit. What would change the choice. -If we were both github pros we probably wouldn't need to test.
+
+## 2026-10-25: Mitch Testing branch
+- Decision. What you chose.
+    - testing how the git commands work and changing some comments
+- Why. The evidence.
+    - making sure we both understand what the order of the commands is
+- Alternative. What you rejected.
+    - no alternatives
+- Revisit. What would change the choice.
+    - none
