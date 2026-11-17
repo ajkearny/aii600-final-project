@@ -37,3 +37,18 @@ This file is the history of the project. Append an entry when a choice changes t
     - Using the commander format of the game which has 2.5x the amount of cards and far less real world data to work, which would force us to do simulations. Simulations are a problem because the deck arent piloted by real people making real decisions with past experience.
 - Revisit. What would change the choice.
     - Nothing yet
+
+
+## 2026-11-16: short title (Mitch)
+
+- Decision. What you chose.
+    - Use 17lands Premier Draft (best-of-1) game data for Bloomburrow (BLB), played 2024-07-30 to 2024-09-03 (931,230 games from 160,150 drafts), with card attributes (mana value, type, colours) from Scryfall's Oracle Cards file dated 2026-11-16. Combine both into one DuckDB database, with one row per game, one per deck and card, and one per card.
+
+- Why. The evidence.
+    - The 17lands game file has one row per game with the deck's cards, the player's rank and colours, and whether they won. The draft pick and replay files have no win results, so they can't give us win rates. Premier Draft is best-of-1, so one game stands for one match, and BLB gives a lot of data: 931,230 games from 160,150 drafts. The game file has no card attributes, so we need Scryfall for mana value, type and colours. DuckDB reads the compressed file directly and lets us select only the columns we need. The CSV is about 2.7 GB with about 1,520 columns, and loading it all at once into pandas ran out of memory in the codespace.
+
+- Alternative. What you rejected.
+    - Traditional Draft (best-of-3), which has far fewer games, and where one game is not one match. The 17lands draft pick and replay files, which have no deck and result rows. Loading the CSV straight into pandas, because of memory.
+
+- Revisit. What would change the choice.
+    - If the 17lands or Scryfall terms turn out not to allow our use of the data. If the date range looks unrepresentative (for example, player skill changing as the season goes on). If DuckDB turns out to be hard to share between us, we would switch to something else.
