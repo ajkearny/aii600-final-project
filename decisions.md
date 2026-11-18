@@ -52,3 +52,25 @@ This file is the history of the project. Append an entry when a choice changes t
 
 - Revisit. What would change the choice.
     - If the 17lands download link stops working, we would put the 17lands file on a `data` release (CC BY 4.0 allows it). If the Scryfall link stops working, we would take the current link from its bulk-data API and update the hash. If the date range looks unrepresentative (for example, player skill changing as the season goes on). If DuckDB turns out to be hard to share between us, we would switch to Parquet files.
+
+## 2026-11-17: Keep every column of the 17lands game file (Autumn)
+
+- Decision. What you chose.
+    - The `games` table in `data/mtg.duckdb` now keeps all 1,400 columns of the 17lands game file, not only 14. That is 20 game-level columns (adding `expansion`, `event_type`, `opp_num_mulligans`, `opp_colors`, `user_n_games_bucket`, `user_game_win_rate_bucket`) and 1,380 per-card count columns: `opening_hand_`, `drawn_`, `tutored_`, `deck_` and `sideboard_` for each of the 276 BLB cards. This reverses the "14 game columns" part of the entry above.
+- Why. The evidence.
+    - Leaving out the card columns was a mistake: we need the `deck_` columns to work out each deck's average mana value, which is the whole project question. Card counts range from 0 to 22, so they are stored as `UTINYINT` (1 byte) instead of `BIGINT` (8 bytes). The DuckDB file is 113 MB, and `SELECT * FROM games` loads into pandas in about 4 seconds as a 1.77 GB DataFrame, not about 10 GB with 64-bit integers.
+- Alternative. What you rejected.
+    - Keeping only the `deck_` columns, because the opening hand and drawn columns may be useful later and are cheap to keep. Leaving the counts as `BIGINT`, because of the memory cost in pandas.
+- Revisit. What would change the choice.
+    - If a later set has a card count above 255 (the `UTINYINT` maximum). If 1.77 GB is too much for the codespace, we would select only the columns we need in SQL before calling `.df()`.
+
+## 2026-11-17: Including Decks with Standard 40 Cards (Autumn)
+
+- Decision. What you chose.
+    - We chose to filter the dataset to only include decks with 40 cards.
+- Why. The evidence.
+    - Magic the Gathering Standard format includes decks with only 40 cards. If a person in the draft cannot narrow their deck to only 40 before the tournament, they may choose to register more cards, but they must play the game with only 40. This created a discrepency in our data as it did not give us visability into which cards were actually played with vs just registered, so we decided to filter out any decks with more than 40 cards registered.
+- Alternative. What you rejected.
+    - Keeping decks with more than 40 cards. This would've created null values within our dataset and since it only made up roughly 6% of the data (and still left us with over 100k rows to work with), we chose to ommit instead of work around.
+- Revisit. What would change the choice.
+    - If we knew what cards were played vs in reserve for each game, we would have been able to use that information to properly calculate the related statistics needed for modeling. 
