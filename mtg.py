@@ -64,13 +64,17 @@ def build_database():
     # cap the memory DuckDB can use to 4Gb sothe codespace doesnt kill the process
     con.execute("SET memory_limit TO '4GB'")
 
-    # games table creation with 1 row per game
+    # games table creation with 1 row per game, keeping every column in the CSV
+    # 20 game-level columns, plus 5 per-card count columns for each of the 276 cards
+    # (opening_, drawn_, tutored_, deck_, sideboard_)
+    # card counts are 0-22, so they are stored as UTINYINT (1 byte) instead of
+    # BIGINT (8 bytes); this keeps the table about 1.3GB in pandas instead of ~10GB
+    card_cols = "'^(opening|drawn|tutored|deck|sideboard)_'"
     con.execute(
         f"""
         CREATE TABLE games AS
-        SELECT draft_id, draft_time, game_time, build_index, match_number,
-               game_number, rank, opp_rank, main_colors, splash_colors,
-               on_play, num_mulligans, num_turns, won
+        SELECT COLUMNS(lambda c: NOT regexp_matches(c, {card_cols})),
+               COLUMNS({card_cols})::UTINYINT
         FROM read_csv('{games_file}', sample_size=20000)
         """
     )
