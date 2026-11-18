@@ -1,5 +1,4 @@
 # Data
-
 The files the notebook reads are not committed. When the terms let you republish them, they are assets on the GitHub release tagged `data`. The release is public. When the terms let you download the files but not republish them, do not create that release. Write the command that downloads them from the source, and say what it needs (an account, a key in `.env`, a path).
 
 `OWNER/REPO` is your fork, the form `username/aii600-final-project`. In the clone, once:
@@ -79,6 +78,6 @@ The 17lands file has about 1,500 columns, mostly one set per card. `games` keeps
 
 ## Republishing
 
-- Scryfall: its terms say the data may not be repackaged or republished, so the file is not on GitHub and is downloaded with the command above.
-- 17lands: licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), which allows republishing with credit to 17lands, a link to the licence, and a note of any changes. We do not change the raw file. The tables in `mtg.duckdb` are derived from it and are not published.
-- Because Scryfall cannot be republished, the project downloads both files from their sources, so there is no `data` release.
+- Scryfall: its terms say the data may not be repackaged or republished, so the raw file is not on GitHub and is downloaded with the command above. 
+- 17lands: licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), which allows republishing with credit to 17lands, a link to the licence, and a note of any changes. The tables in `mtg.duckdb` are derived from it and are not published. These tables are then used to create `mtg_data_clean.csv` which is published. This file includes 17lands' deck data to create a dataset of only dual-colored, 40 card decks and includea the outcomes of the games played with that deck. 
+- Because Scryfall cannot be republished, the project downloads both files from their sources, so there is no raw data in the release. However, mtg_data_clean.csv is available in the release as it uses 17lands (outlined above) and calculations derived from Scryfall to create `mtg_data_clean.csv`, which is allowed by both sites. 
