@@ -26,14 +26,28 @@ These still need their `decisions.md` entries. Those entries are tasks below.
 
 ## Setup
 
+<<<<<<< HEAD
+- [ x] **Fork settings.** Turn Issues on. Add your collaborator and `VadimSokolov` as Write collaborators. Owner:
+- [x ] **Point `gh` at our fork.** In each clone, run `gh repo set-default OWNER/REPO`, so pull requests go to our fork, not the course starter. Owner:
+=======
 - [x] **Fork settings.** Turn Issues on. Add your collaborator and `VadimSokolov` as Write collaborators. Owner:
 - [x] **Point `gh` at our fork.** In each clone, run `gh repo set-default OWNER/REPO`, so pull requests go to our fork, not the course starter. Owner:
+>>>>>>> origin/main
 - [x] **README names.** Add both names and GitHub usernames under "Who". Owner:
-- [ ] **README AI note.** Add one line on which AI tools we used and for what. Owner:
-- [ ] **Python version.** Put the real version in `.python-version`, and list the exact package versions the notebook uses in `requirements.txt`. Owner:
+- [ x] **README AI note.** Add one line on which AI tools we used and for what. Owner:
+- [x ] **Python version.** Put the real version in `.python-version`, and list the exact package versions the notebook uses in `requirements.txt`. Owner:
 
 ## Step 1: Get the data
 
+<<<<<<< HEAD
+- [x ] **1a. Lock in the choices.** In `PROPOSAL.md`, fill in Premier Draft, BLB, the dates, and the game and deck counts, and change the loss to `1 − p`. Add a `decisions.md` entry explaining why: more data, and one game stands for one match. Owner:
+- [ x] **1b. Check the licences** for 17lands and Scryfall. This decides whether we may re-upload the files to GitHub, or must give a download command instead. Fill in *Republishing* in `PROPOSAL.md`. Owner:
+- [ x] **1c. Download the BLB Premier Draft game file** from 17lands (first check it's still listed). It's one row per game, with the deck's cards and whether the game was won. Owner:
+- [ x] **1d. Download the Scryfall card data:** mana value, type, and colours for each card. Owner:
+- [ x] **1e. Write `data/README.md`:** where each file came from, its name, the download command, and its SHA-256. The SHA-256 is a fingerprint that proves the file hasn't changed. Owner:
+- [x ] **1f. Make the GitHub `data` release** if the licences allow it. It must exist by 18 Nov. Owner:
+- [ x] **1g. Loading code in `mtg.py`.** It reads the files and checks their fingerprints. Owner:
+=======
 - [x] **1a. Lock in the choices.** In `PROPOSAL.md`, fill in Premier Draft, BLB, the dates, and the game and deck counts, and change the loss to `1 − p`. Add a `decisions.md` entry explaining why: more data, and one game stands for one match. Owner:
 - [x] **1b. Check the licences** for 17lands and Scryfall. This decides whether we may re-upload the files to GitHub, or must give a download command instead. Fill in *Republishing* in `PROPOSAL.md`. Owner:
 - [x] **1c. Download the BLB Premier Draft game file** from 17lands (first check it's still listed). It's one row per game, with the deck's cards and whether the game was won. Owner:
@@ -41,6 +55,7 @@ These still need their `decisions.md` entries. Those entries are tasks below.
 - [x] **1e. Write `data/README.md`:** where each file came from, its name, the download command, and its SHA-256. The SHA-256 is a fingerprint that proves the file hasn't changed. Owner:
 - [x] **1f. Make the GitHub `data` release** if the licences allow it. It must exist by 18 Nov. Owner:
 - [x] **1g. Loading code in `mtg.py`.** It reads the files and checks their fingerprints. Owner:
+>>>>>>> origin/main
 
 ## Step 2: Clean it
 
