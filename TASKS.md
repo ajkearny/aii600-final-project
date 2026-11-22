@@ -70,6 +70,7 @@ These still need their `decisions.md` entries. Those entries are tasks below.
 
 - [ ] **3a. Main chart:** deck win rate vs. average mana value. Group the decks into mana value bins, plot each bin's average with error bars, and save it to `fig/`. Owner:
 - [ ] **3b. Extra charts:** win rate vs. lands, vs. creatures, by colour pair, and by skill bucket. Save them to `fig/`. Owner:
+
 - [ ] **3c. Summary table:** total games, decks, and date range, plus the average, spread, min, and max of `m`, `c`, `L`, and win rate. Owner:
 - [ ] **3d. Same table split by colour pair** (10 rows, one per BLB tribe). Owner:
 - [ ] **3e. A 2 to 3 sentence note** under the chart on what we see, written before fitting anything. Owner:

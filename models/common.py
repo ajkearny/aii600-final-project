@@ -37,29 +37,35 @@ def fake_decks(n=20000, seed=SEED):
     avg_mana_value = rng.normal(2.9, 0.4, n)
     # creatures: a whole number from 10 to 17 (the upper bound 18 is left out)
     num_creatures = rng.integers(10, 18, n)
-    # lands: a whole number from 15 to 18 (the upper bound 19 is left out)
+    # lands: a whole number from 10 to 18 (the upper bound 19 is left out)
     num_lands = rng.integers(15, 19, n)
 
     # the true win chance on a logit scale: bump peaks at 2.9 mana value and 17 lands,
     # plus 0.05 per creature above or below 14
-    logit = (0.3
-             - 1.7 * (avg_mana_value - 2.9) ** 2
-             - 0.1 * (num_lands - 17) ** 2
-             + 0.05 * (num_creatures - 14))
+    logit = (
+        0.3
+        - 1.7 * (avg_mana_value - 2.9) ** 2
+        - 0.1 * (num_lands - 17) ** 2
+        + 0.05 * (num_creatures - 14)
+    )
 
     games = rng.integers(3, 8, n)  # games played by each deck (3 to 7)
-    wins = rng.binomial(games, 1 / (1 + np.exp(-logit)))  # games won, drawn from the true win chance
+    wins = rng.binomial(
+        games, 1 / (1 + np.exp(-logit))
+    )  # games won, drawn from the true win chance
 
-    return pd.DataFrame({
-        "draft_id": np.arange(n),
-        "avg_mana_value": avg_mana_value,
-        "num_creatures": num_creatures,
-        "num_lands": num_lands,
-        "games": games,
-        "wins": wins,
-        # not used in the truth, so models should find ~no effect
-        "main_colors": rng.choice(["BG", "WG", "UG", "WB", "WR"], n),
-    })
+    return pd.DataFrame(
+        {
+            "draft_id": np.arange(n),
+            "avg_mana_value": avg_mana_value,
+            "num_creatures": num_creatures,
+            "num_lands": num_lands,
+            "games": games,
+            "wins": wins,
+            # not used in the truth, so models should find ~no effect
+            "main_colors": rng.choice(["BG", "WG", "UG", "WB", "WR"], n),
+        }
+    )
 
 
 def split_by_draft(decks, test_fraction=0.25, seed=SEED):
@@ -71,7 +77,9 @@ def split_by_draft(decks, test_fraction=0.25, seed=SEED):
     """
     rng = np.random.default_rng(seed)
     drafts = decks.draft_id.unique()
-    test_drafts = rng.choice(drafts, size=round(test_fraction * len(drafts)), replace=False)
+    test_drafts = rng.choice(
+        drafts, size=round(test_fraction * len(drafts)), replace=False
+    )
     is_test = decks.draft_id.isin(test_drafts)
     return decks[~is_test], decks[is_test]
 
@@ -80,16 +88,20 @@ def make_X(df, columns=None):
     """Turn decks into a table of numbers: mana value, mana value squared, creatures,
     lands, lands squared, and 0/1 columns for colour pair.
     The squared terms let the curve rise and then fall."""
-    X = pd.DataFrame({
-        "avg_mana_value": df.avg_mana_value,
-        "avg_mana_value_sq": df.avg_mana_value ** 2,
-        "num_creatures": df.num_creatures,
-        "num_creatures_sq": df.num_creatures ** 2,
-        "num_lands": df.num_lands,
-        "num_lands_sq": df.num_lands ** 2,
-    })
+    X = pd.DataFrame(
+        {
+            "avg_mana_value": df.avg_mana_value,
+            "avg_mana_value_sq": df.avg_mana_value**2,
+            "num_creatures": df.num_creatures,
+            "num_creatures_sq": df.num_creatures**2,
+            "num_lands": df.num_lands,
+            "num_lands_sq": df.num_lands**2,
+        }
+    )
     # colour pair is a category, so it becomes 0/1 columns; drop_first leaves one out as the reference
-    dummies = pd.get_dummies(df["main_colors"], prefix="main_colors", drop_first=True, dtype=float)
+    dummies = pd.get_dummies(
+        df["main_colors"], prefix="main_colors", drop_first=True, dtype=float
+    )
     X = pd.concat([X, dummies], axis=1)
     if columns is not None:
         # make the test table have exactly the training columns, in the same order

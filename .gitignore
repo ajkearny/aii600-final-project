@@ -21,3 +21,6 @@ data/*
 *.onnx
 wandb/
 mlruns/
+
+
+STUDY_GUIDE.md
