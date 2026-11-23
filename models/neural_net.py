@@ -1,12 +1,12 @@
-# neural_net.py: a small neural network (MLP)
+# a small neural network (MLP)
 from sklearn.neural_network import MLPRegressor
 from .common import SEED
-from .trees import make_X_trees  # reuse the same raw-column table
+from .trees import make_X_trees
 
 
 def fit(train, hidden=(16, 8), seed=SEED):
     X = make_X_trees(train)
-    mean, sd = X.mean(), X.std()  # learned from training data only
+    mean, sd = X.mean(), X.std()
     Z = (X - mean) / sd
     y = train.wins / train.games
     model = MLPRegressor(

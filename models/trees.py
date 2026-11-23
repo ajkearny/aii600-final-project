@@ -1,4 +1,4 @@
-# trees.py: gradient boosted trees on the same decks
+# gradient boosted trees on the same decks
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 from .common import SEED
@@ -16,14 +16,14 @@ def make_X_trees(df, columns=None):
 
 def fit(train, max_depth=3, learning_rate=0.05, max_iter=300, seed=SEED):
     X = make_X_trees(train)
-    y = train.wins / train.games  # win rate per deck
+    y = train.wins / train.games
     model = HistGradientBoostingRegressor(
         max_depth=max_depth,
         learning_rate=learning_rate,
         max_iter=max_iter,
         random_state=seed,
     )
-    model.fit(X, y, sample_weight=train.games)  # decks with more games count more
+    model.fit(X, y, sample_weight=train.games)
     return {"model": model, "cols": list(X.columns)}
 
 

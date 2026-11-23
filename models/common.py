@@ -8,40 +8,22 @@ SEED = 0  # one number to make sure the random draw is the same each time
 # the project's data folder (one level up from this models/ folder)
 DATA = Path(__file__).parent.parent / "data"
 
-# column names, exactly as they appear in data/mtg_data_clean.csv:
-#   avg_mana_value  average mana value of the nonland cards
-#   num_creatures   number of creatures
-#   num_lands       number of lands
-#   main_colors     the deck's colour pair, e.g. "BG"
-#   wins, games     games won and games played by the deck
-#   draft_id        the draft the deck came from (one draft can have several builds)
 
-
+# one row per deck. first column in the csv is just the old row number
 def load_decks(filename="mtg_data_clean.csv"):
-    """Read the cleaned deck table: one row per deck."""
-    # index_col=0: the first column in the file is only a row number (0, 1, 2, ...)
-    # that pandas wrote when the file was saved, so we use it as the index, not as data
     return pd.read_csv(DATA / filename, index_col=0)
 
 
+# fake decks where we set the answer ourselves, to check the model can find it
+# win chance peaks at 2.9 mana value and 17 lands, +0.05 logit per creature
+# colour pair does nothing here
 def fake_decks(n=20000, seed=SEED):
-    """Made-up decks where we know the right answer, to test that the code finds it.
+    rng = np.random.default_rng(seed)
 
-    The built-in "truth" is: win chance peaks at average mana value 2.9 and 17 lands,
-    and each extra creature adds 0.05 on the logit scale.
-    Columns have the same names as the real table.
-    """
-    rng = np.random.default_rng(seed)  # random number generator with a fixed seed
-
-    # average mana value: normally distributed around 2.9 with a standard deviation of 0.4
     avg_mana_value = rng.normal(2.9, 0.4, n)
-    # creatures: a whole number from 10 to 17 (the upper bound 18 is left out)
-    num_creatures = rng.integers(10, 18, n)
-    # lands: a whole number from 10 to 18 (the upper bound 19 is left out)
-    num_lands = rng.integers(15, 19, n)
+    num_creatures = rng.integers(10, 18, n)  # 10 to 17
+    num_lands = rng.integers(15, 19, n)  # 15 to 18
 
-    # the true win chance on a logit scale: bump peaks at 2.9 mana value and 17 lands,
-    # plus 0.05 per creature above or below 14
     logit = (
         0.3
         - 1.7 * (avg_mana_value - 2.9) ** 2
@@ -49,10 +31,8 @@ def fake_decks(n=20000, seed=SEED):
         + 0.05 * (num_creatures - 14)
     )
 
-    games = rng.integers(3, 8, n)  # games played by each deck (3 to 7)
-    wins = rng.binomial(
-        games, 1 / (1 + np.exp(-logit))
-    )  # games won, drawn from the true win chance
+    games = rng.integers(3, 8, n)  # 3 to 7
+    wins = rng.binomial(games, 1 / (1 + np.exp(-logit)))
 
     return pd.DataFrame(
         {
@@ -62,19 +42,14 @@ def fake_decks(n=20000, seed=SEED):
             "num_lands": num_lands,
             "games": games,
             "wins": wins,
-            # not used in the truth, so models should find ~no effect
             "main_colors": rng.choice(["BG", "WG", "UG", "WB", "WR"], n),
         }
     )
 
 
+# random 25% of drafts go to test. split on draft_id not rows, because one draft
+# can have a few builds and they all need to be on the same side
 def split_by_draft(decks, test_fraction=0.25, seed=SEED):
-    """Hold out a random 25% of drafts for testing; train on the rest.
-
-    The table has no dates, so we split at random. We pick whole drafts, not single rows,
-    so every build of the same draft is on the same side and the test stays unseen.
-    The seed and the fraction go in decisions.md.
-    """
     rng = np.random.default_rng(seed)
     drafts = decks.draft_id.unique()
     test_drafts = rng.choice(
@@ -84,10 +59,9 @@ def split_by_draft(decks, test_fraction=0.25, seed=SEED):
     return decks[~is_test], decks[is_test]
 
 
+# feature table for the SGD model: the three deck numbers, their squares,
+# and 0/1 columns for colour pair
 def make_X(df, columns=None):
-    """Turn decks into a table of numbers: mana value, mana value squared, creatures,
-    lands, lands squared, and 0/1 columns for colour pair.
-    The squared terms let the curve rise and then fall."""
     X = pd.DataFrame(
         {
             "avg_mana_value": df.avg_mana_value,
@@ -98,7 +72,7 @@ def make_X(df, columns=None):
             "num_lands_sq": df.num_lands**2,
         }
     )
-    # colour pair is a category, so it becomes 0/1 columns; drop_first leaves one out as the reference
+    # first pair is dropped as the reference
     dummies = pd.get_dummies(
         df["main_colors"], prefix="main_colors", drop_first=True, dtype=float
     )
@@ -109,12 +83,9 @@ def make_X(df, columns=None):
     return X
 
 
+# how far off the predicted win rate is on average, in wins per 100 games
+# weighted by games since a deck with 7 games is less noisy than one with 3
 def error_per_100(test, pred):
-    """Accuracy score: on average, how far off is the predicted win rate, in wins per 100 games.
-
-    Smaller is better. Decks with more games count more (weights=games),
-    because their real win rate is less noisy.
-    """
     return 100 * np.average(np.abs(test.wins / test.games - pred), weights=test.games)
 
 
@@ -122,13 +93,10 @@ def error_per_100(test, pred):
 PEAK_TOLERANCE = {"avg_mana_value": 0.2, "num_creatures": 1, "num_lands": 0}
 
 
+# True/False per deck: does it follow the advice on all three choices
+# peak -> within the tolerance of the best value
+# lower/higher is better -> in the bottom/top quarter of the training decks
 def follows_advice(decks, best, train):
-    """True for each deck that follows the advice on all three choices.
-
-    - a peak (sweet spot): the deck is within PEAK_TOLERANCE of the best value
-    - "lower is better": the deck is in the lowest quarter of training decks on that choice
-    - "higher is better": the deck is in the highest quarter of training decks on that choice
-    """
     ok = pd.Series(True, index=decks.index)
     for col, b in best.items():
         if b["shape"] == "peak":
@@ -140,12 +108,8 @@ def follows_advice(decks, best, train):
     return ok
 
 
+# win rate of test decks that follow the advice vs test decks on 17 lands
 def value_per_100(test, follows):
-    """Do test decks that follow the advice win more than test decks that played 17 lands?
-
-    follows: True/False for each test deck (from follows_advice).
-    Answer is in wins per 100 games. 'gain' is the extra wins per 100.
-    """
     near = test[follows]
     base = test[test.num_lands == 17]
     near_rate = 100 * near.wins.sum() / near.games.sum()

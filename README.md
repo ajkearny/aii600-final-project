@@ -56,7 +56,7 @@ Leave the data files out of git. A file you are allowed to republish goes on the
 
 R or Python. Use the language you can explain. AI assistants are allowed. On your fork, add one line to this README: what you used, and for what. You are responsible for everything on `main`, including the parts you did not write.
 
-AI usage: Claude Code, to help build the DuckDB database, to understand how to read the `.gz` files, and to use `hashlib` so the Codespace did not run out of space. Used Calude code to help set up the three models used to complete the calcuations. Claude was also used to set up the report file so that models.ipynb could be used to show the results of the models as well creating the plots to show the results.
+AI usage: Claude Code, to help build the DuckDB database, to understand how to read the `.gz` files, and to use `hashlib` so the Codespace did not run out of space. Used Claude Code to help set up the five models used to complete the calcuations. Claude was also used to set up the report file so that models.ipynb could be used to show the results of the models as well creating the plots to show the results.
 
 ## Files
 
