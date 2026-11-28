@@ -1,4 +1,4 @@
-# baseline.py: predict the same win rate for every deck (task 4b)
+# predict the same win rate for every deck (task 4b)
 import numpy as np
 
 
@@ -8,5 +8,4 @@ def fit(train):
 
 
 def predict(rate, df):
-    # one prediction per deck, all equal to the average
     return np.full(len(df), rate)

@@ -6,8 +6,6 @@ Follow the [final project lab](https://vsokolov.org/labs/final-project-lab.html)
 
 ## Who
 
-Autumn Kearny and Mitchell Fussell
-
 Alone, or a group of at most three. One person forks. That person adds the other members and `VadimSokolov` as collaborators. On a repository owned by a personal account the role is Write. On the fork, write the names and GitHub usernames under this heading. One person speaks at the presentation. Every member can explain the whole repository.
 
 ## Fork
@@ -58,7 +56,7 @@ Leave the data files out of git. A file you are allowed to republish goes on the
 
 R or Python. Use the language you can explain. AI assistants are allowed. On your fork, add one line to this README: what you used, and for what. You are responsible for everything on `main`, including the parts you did not write.
 
-AI usage: Claude Code, to help build the DuckDB database, to understand how to read the `.gz` files, and to use `hashlib` so the Codespace did not run out of space.
+AI usage: Claude Code, to help build the DuckDB database, to understand how to read the `.gz` files, and to use `hashlib` so the Codespace did not run out of space. Used Claude Code to help set up the five models used to complete the calcuations. Claude was also used to set up the report file so that models.ipynb could be used to show the results of the models as well creating the plots to show the results.
 
 ## Files
 

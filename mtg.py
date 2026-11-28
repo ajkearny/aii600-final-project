@@ -26,7 +26,10 @@ def sha256(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
         # read 1mb at a time so a big file does not sit in memory and clog it
-        for block in iter(lambda: f.read(1 << 20), b""):
+        while True:
+            block = f.read(1024 * 1024)
+            if not block:
+                break
             h.update(block)
     return h.hexdigest()
 
